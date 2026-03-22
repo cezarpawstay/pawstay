@@ -2,13 +2,6 @@ import { useState, useMemo, useRef } from "react";
 
 const CAD_USD = 0.74;
 
-// ─── LANGUAGE SYSTEM ─────────────────────────────────────────────────────────
-let _lang = "EN";
-const setGlobalLang = (l) => { _lang = l; };
-
-const T = (en, fr) => _lang === "FR" ? fr : en;
-
-
 // ─── EMAILJS CONFIG ──────────────────────────────────────────────────────────
 const EMAILJS_SERVICE  = "service_8lfa0t9";
 const EMAILJS_TEMPLATE = "template_lbbuwtk";
@@ -115,7 +108,7 @@ const SITTERS = [
   },
 ];
 
-const CITIES = [T("All cities","Toutes les villes"),"Toronto","Montreal","Vancouver","Calgary","Ottawa","Edmonton"];
+const CITIES = ["All cities","Toronto","Montreal","Vancouver","Calgary","Ottawa","Edmonton"];
 const PET_TYPES = ["Dog","Cat","Bird","Rabbit","Hamster"];
 const SERVICES_LIST = ["Overnight stay","Home visits","Daily walks","Grooming"];
 
@@ -281,7 +274,7 @@ export default function App() {
   const [sitters, setSitters] = useState(SITTERS);
   const [currency, setCurrency] = useState("CAD");
   const [lang, setLang] = useState("EN");
-  const switchLang = (l) => { setGlobalLang(l); setLang(l); };
+  const isFR = lang === "FR";
   const [modal, setModal] = useState(null);
   const [selected, setSelected] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -289,13 +282,13 @@ export default function App() {
   const [isSitter, setIsSitter] = useState(false);
   const [paymentData, setPaymentData] = useState(null);
   const [toast, setToast] = useState(null);
-  const [filterCity, setFilterCity] = useState(T("All cities","Toutes les villes"));
-  const [filterPet, setFilterPet] = useState(T("All","Tous"));
+  const [filterCity, setFilterCity] = useState("All cities");
+  const [filterPet, setFilterPet] = useState("All");
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterYard, setFilterYard] = useState(false);
   const [filterMed, setFilterMed] = useState(false);
-  const [sortBy, setSortBy] = useState(T("Recommended","Recommandé"));
-  const [search, setSearch] = useState({ from:"", to:"", pet:T("All","Tous") });
+  const [sortBy, setSortBy] = useState("Recommended");
+  const [search, setSearch] = useState({ from:"", to:"", pet:"All" });
   const [photoModal, setPhotoModal] = useState(null);
   const [reviewForm, setReviewForm] = useState({ sitterId:null, stars:5, text:"", pet:"", photo:null });
   const fileRef = useRef();
@@ -310,22 +303,22 @@ export default function App() {
 
   const filtered = useMemo(() => {
     let list = [...sitters];
-    if (filterCity !== T("All cities","Toutes les villes")) list = list.filter(s => s.city === filterCity);
-    if (filterPet !== T("All","Tous")) list = list.filter(s => s.accepts.includes(filterPet));
+    if (filterCity !== "All cities") list = list.filter(s => s.city === filterCity);
+    if (filterPet !== "All") list = list.filter(s => s.accepts.includes(filterPet));
     if (filterAvail) list = list.filter(s => s.available);
     if (filterYard) list = list.filter(s => s.hasYard);
     if (filterMed) list = list.filter(s => s.medicationOk);
-    if (sortBy === T("Cheapest","Moins cher")) list.sort((a,b) => a.price-b.price);
+    if (sortBy === "Cheapest") list.sort((a,b) => a.price-b.price);
     else if (sortBy === "Most expensive") list.sort((a,b) => b.price-a.price);
     else if (sortBy === "Rating") list.sort((a,b) => b.rating-a.rating);
-    else if (sortBy === T("Most reviews","Plus d'avis")) list.sort((a,b) => b.reviewCount-a.reviewCount);
+    else if (sortBy === "Most reviews") list.sort((a,b) => b.reviewCount-a.reviewCount);
     return list;
   }, [sitters, filterCity, filterPet, filterAvail, filterYard, filterMed, sortBy]);
 
   const handleBook = () => {
     if (!loggedIn) { setModal("auth"); return; }
-    if (nights < 1) { showToast(T("Please select check-in and check-out dates!","Veuillez sélectionner les dates d'arrivée et de départ!"), false); return; }
-    if (!selected.available) { showToast(T("This sitter is not available right now.","Ce gardien n'est pas disponible pour le moment."), false); return; }
+    if (nights < 1) { showToast("Please select check-in and check-out dates!", false); return; }
+    if (!selected.available) { showToast("This sitter is not available right now.", false); return; }
     const base = selected.price * nights;
     const fee = Math.round(base * OWNER_FEE);
     setPaymentData({
@@ -368,7 +361,7 @@ export default function App() {
       return { ...s, photos: [newPhoto, ...s.photos], rating: Math.round(newRating*10)/10, reviewCount: s.reviewCount+1 };
     }));
     setModal(null);
-    showToast(T("✓ Your review and photo have been published! Thank you.","✓ Votre avis et photo ont été publiés! Merci."));
+    showToast("✓ Your review and photo have been published! Thank you.");
     sendNotification("⭐ New Review Posted", {
       name: userName,
       message: `Rating: ${reviewForm.stars}/5 stars | Pet: ${reviewForm.pet} | Review: ${reviewForm.text}`,
@@ -389,7 +382,7 @@ export default function App() {
     };
     setSitters(prev => [newSitter, ...prev]);
     setModal(null);
-    showToast(T("✓ Your sitter profile is now live! 🐾","✓ Votre profil de gardien est en ligne! 🐾"));
+    showToast("✓ Your sitter profile is now live! 🐾");
     sendNotification("🏠 New Sitter Registered", {
       name: newSitter.name,
       message: `City: ${newSitter.city} | Zone: ${newSitter.zone} | Price: CA$${newSitter.price}/night | Accepts: ${newSitter.accepts.join(", ")} | Services: ${newSitter.services.join(", ")}`,
@@ -696,7 +689,7 @@ export default function App() {
                 {[...Array(2)].map((_,i)=><div key={"e"+i} style={{aspectRatio:"1"}}/>)}
                 {[...Array(30)].map((_,i)=>{
                   const d=i+1, busy=s.busyDays.includes(d);
-                  return <div key={d} className={"cal-day "+(busy?"cal-b":"cal-a")} title={busy?"Busy":T("Available","Disponible")}>{d}</div>;
+                  return <div key={d} className={"cal-day "+(busy?"cal-b":"cal-a")} title={busy?"Busy":"Available"}>{d}</div>;
                 })}
               </div>
               <div style={{display:"flex",gap:"1rem",marginTop:".5rem",fontSize:".7rem",color:"var(--mu)"}}>
@@ -770,7 +763,7 @@ export default function App() {
               </div>
               <div className="ff">
                 <label>Message to sitter</label>
-                <textarea placeholder={T("Tell them about your pet — breed, age, habits, special needs...","Parlez de votre animal — race, âge, habitudes, besoins spéciaux...")/>
+                <textarea placeholder="Tell them about your pet — breed, age, habits, special needs..."/>
               </div>
               <BookingBreakdown s={s}/>
               <button className="btn btn-a btn-full" style={{marginTop:".85rem"}} onClick={handleBook}>
@@ -817,7 +810,7 @@ export default function App() {
                   <div className="cbg">{PET_TYPES.map(p=><span key={p} className={"cbi"+(pets.includes(p)?" on":"")} onClick={()=>toggle(p)}>{"🐕🐈🐦🐇🐹".split("")[PET_TYPES.indexOf(p)]} {p}</span>)}</div>
                 </div>}
                 <button className="btn btn-a btn-full" type="submit">
-                  {tab==="sitter"?T("Continue to sitter setup →","Continuer →"):T("Create free account","Créer un compte gratuit")}
+                  {tab==="sitter"?"Continue to sitter setup →":"Create free account"}
                 </button>
               </form>
             )}
@@ -843,7 +836,7 @@ export default function App() {
                 <div className="fg"><label>City</label>
                   <select name="city" required>
                     <option value="">Select...</option>
-                    {CITIES.filter(c=>c!=={T("All cities","Toutes les villes")}).map(c=><option key={c}>{c}</option>)}
+                    {CITIES.filter(c=>c!=="All cities").map(c=><option key={c}>{c}</option>)}
                   </select>
                 </div>
               </div>
@@ -907,10 +900,10 @@ export default function App() {
               </div>
             </div>
             <div className="fg"><label>Pet name & breed</label>
-              <input placeholder={T("e.g. Max — Golden Retriever","ex. Max — Labrador") value={pet} onChange={e=>setPet(e.target.value)} required/>
+              <input placeholder="e.g. Max — Golden Retriever" value={pet} onChange={e=>setPet(e.target.value)} required/>
             </div>
             <div className="fg"><label>Your review</label>
-              <textarea placeholder={T("Tell others about your experience — how was your pet cared for?","Partagez votre expérience — comment votre animal a-t-il été gardé?") value={text} onChange={e=>setText(e.target.value)} style={{minHeight:100}} required/>
+              <textarea placeholder="Tell others about your experience — how was your pet cared for?" value={text} onChange={e=>setText(e.target.value)} style={{minHeight:100}} required/>
             </div>
             <div className="fg"><label>Upload a photo of your pet 📸</label>
               <input type="file" accept="image/*" ref={fileRef} style={{display:"none"}} onChange={handleFile}/>
@@ -945,7 +938,7 @@ export default function App() {
         <div className="logo">Paw<span>Stay</span> 🐾</div>
         <div className="nav-r">
           <div className="cur-tog" style={{marginRight:".3rem"}}>
-            {["EN","FR"].map(l=><button key={l} className={"cur-btn"+(lang===l?" on":"")} onClick={()=>switchLang(l)}>{l==="EN"?"🇬🇧 EN":"🇫🇷 FR"}</button>)}
+            {["EN","FR"].map(l=><button key={l} className={"cur-btn"+(lang===l?" on":"")} onClick={()=>setLang(l)}>{l==="EN"?"🇬🇧 EN":"🇫🇷 FR"}</button>)}
           </div>
           <div className="cur-tog">
             {["CAD","USD"].map(c=><button key={c} className={"cur-btn"+(currency===c?" on":"")} onClick={()=>setCurrency(c)}>{c}</button>)}
@@ -954,7 +947,7 @@ export default function App() {
             ? <span style={{fontSize:".82rem",color:"var(--mu)"}}>👋 {userName}{isSitter?" (Sitter)":""}</span>
             : <button className="btn btn-gh" onClick={()=>setModal("auth")}>Sign in</button>}
           <button className="btn btn-a" onClick={()=>setModal(isSitter?"sitter-reg":"auth")}>
-            {isSitter ? "My Profile" : T("List your home","Devenir gardien")}
+            {isSitter ? "My Profile" : {isFR?"Devenir gardien":"List your home"}}
           </button>
         </div>
       </nav>
@@ -963,7 +956,7 @@ export default function App() {
       <div className="hero">
         <div>
           <div className="hero-tag">🐾 #1 Pet Sitting Platform in Canada</div>
-          <h1>Go on vacation,<br/>leave your pet in <i>loving hands</i></h1>
+          <h1>{isFR?"Partez en vacances,":"Go on vacation,"}<br/>{isFR?"laissez votre animal en ":"leave your pet in "}<i>{isFR?"bonnes mains":"loving hands"}</i></h1>
           <p>Connect with trusted, verified pet sitters across Canada. Sitters set their own prices, availability and conditions. You choose by rating, price and reviews.</p>
           <div className="hero-btns">
             <button className="btn btn-a btn-lg" onClick={()=>document.getElementById("sitters").scrollIntoView({behavior:"smooth"})}>Find a sitter 🔍</button>
@@ -1019,7 +1012,7 @@ export default function App() {
 
       {/* STATS */}
       <div className="stats">
-        {[["1,200+",T("Verified sitters","Gardiens vérifiés")],["15,000+",T("Happy pets","Animaux heureux")],["4.9 ★",T("Average rating","Note moyenne")],["98%",T("Satisfied owners","Propriétaires satisfaits")]].map(([n,l])=>(
+        {[["1,200+","Verified sitters"],["15,000+","Happy pets"],["4.9 ★","Average rating"],["98%","Satisfied owners"]].map(([n,l])=>(
           <div className="stat" key={l}><div className="stat-n">{n}</div><div className="stat-l">{l}</div></div>
         ))}
       </div>
@@ -1034,12 +1027,12 @@ export default function App() {
         {/* FILTERS */}
         <div className="filters">
           <span className="flbl">Filter:</span>
-          {PET_TYPES.map(p=><button key={p} className={"fc"+(filterPet===p?" on":"")} onClick={()=>setFilterPet(filterPet===p?T("All","Tous"):p)}>{"🐕🐈🐦🐇🐹".split("")[PET_TYPES.indexOf(p)]} {p}</button>)}
+          {PET_TYPES.map(p=><button key={p} className={"fc"+(filterPet===p?" on":"")} onClick={()=>setFilterPet(filterPet===p?"All":p)}>{"🐕🐈🐦🐇🐹".split("")[PET_TYPES.indexOf(p)]} {p}</button>)}
           <button className={"fc"+(filterAvail?" on":"")} onClick={()=>setFilterAvail(!filterAvail)}>✓ Available now</button>
           <button className={"fc"+(filterYard?" on":"")} onClick={()=>setFilterYard(!filterYard)}>🌿 Has yard</button>
           <button className={"fc"+(filterMed?" on":"")} onClick={()=>setFilterMed(!filterMed)}>💊 Meds OK</button>
           <span className="flbl" style={{marginLeft:".5rem"}}>Sort:</span>
-          {[T("Recommended","Recommandé"),T("Cheapest","Moins cher"),"Rating",T("Most reviews","Plus d'avis")].map(s=><button key={s} className={"fc"+(sortBy===s?" on":"")} onClick={()=>setSortBy(s)}>{s}</button>)}
+          {["Recommended","Cheapest","Rating","Most reviews"].map(s=><button key={s} className={"fc"+(sortBy===s?" on":"")} onClick={()=>setSortBy(s)}>{s}</button>)}
         </div>
 
         {/* CARDS */}
@@ -1056,7 +1049,7 @@ export default function App() {
                 {s.photos.length > 0
                   ? <img src={s.photos[0].url} alt={s.name} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
                   : <div className="scard-img-bg" style={{background:s.bg}}>{s.avatar}</div>}
-                <div className={"avl "+(s.available?"avl-y":"avl-n")}>{s.available?T("✓ Available","✓ Disponible"):T("✗ Unavailable","✗ Indisponible")}</div>
+                <div className={"avl "+(s.available?"avl-y":"avl-n")}>{s.available?"✓ Available":"✗ Unavailable"}</div>
               </div>
               <div className="scard-body">
                 <div className="scard-top">
@@ -1100,9 +1093,9 @@ export default function App() {
           <div className="how-sub">Simple, transparent, trusted</div>
           <div className="how-grid">
             {[
-              {i:"🔍",t:T("Search & filter","Rechercher et filtrer"),p:T("Browse sitters by city, pet type, price and rating. Sitters set their own rates and availability.","Parcourez les gardiens par ville, type d'animal, prix et note.")},
-              {i:"📅",t:T("Book a stay","Réserver un séjour"),p:T("Choose your dates, send a request with a message. The sitter confirms within a few hours.","Choisissez vos dates et envoyez une demande. Le gardien confirme en quelques heures.")},
-              {i:"📸",t:T("Daily photo updates","Photos quotidiennes"),p:T("Your sitter sends photos and updates every day. After the stay, leave a review with a photo!","Votre gardien envoie des photos chaque jour. Après le séjour, laissez un avis!")},
+              {i:"🔍",t:"Search & filter",p:"Browse sitters by city, pet type, price and rating. Sitters set their own rates and availability."},
+              {i:"📅",t:"Book a stay",p:"Choose your dates, send a request with a message. The sitter confirms within a few hours."},
+              {i:"📸",t:"Daily photo updates",p:"Your sitter sends photos and updates every day. After the stay, leave a review with a photo!"},
             ].map(({i,t,p})=>(
               <div className="how-step" key={t}>
                 <div className="how-ico">{i}</div>
