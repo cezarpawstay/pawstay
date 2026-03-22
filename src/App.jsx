@@ -1103,8 +1103,7 @@ export default function App() {
 
       <footer>
         <div className="flogo">Paw<span>Stay</span> 🐾</div>
-        <div>© 2026 PawStay · Verified platform · Secure PayPal payments · Canada</div>
-        <div style={{marginTop:".3rem"}}>Platform fee: 8% charged to pet owners · 7% retained from sitters · 15% total</div>
+        <div>© 2026 PawStay · Verified platform · Secure PayPal payments · Canada · <a href="/privacy" style={{color:"var(--amb)",textDecoration:"none"}}>Privacy Policy</a>        <div style={{marginTop:".3rem"}}>Platform fee: 8% charged to pet owners · 7% retained from sitters · 15% total</div>
       </footer>
 
       {/* MODALS */}
