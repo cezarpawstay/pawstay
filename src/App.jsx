@@ -273,8 +273,6 @@ function PaymentModal({ booking, onClose, onSuccess }) {
 export default function App() {
   const [sitters, setSitters] = useState(SITTERS);
   const [currency, setCurrency] = useState("CAD");
-  const [lang, setLang] = useState("EN");
-  const isFR = lang === "FR";
   const [modal, setModal] = useState(null);
   const [selected, setSelected] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -937,9 +935,6 @@ export default function App() {
       <nav>
         <div className="logo">Paw<span>Stay</span> 🐾</div>
         <div className="nav-r">
-          <div className="cur-tog" style={{marginRight:".3rem"}}>
-            {["EN","FR"].map(l=><button key={l} className={"cur-btn"+(lang===l?" on":"")} onClick={()=>setLang(l)}>{l==="EN"?"🇬🇧 EN":"🇫🇷 FR"}</button>)}
-          </div>
           <div className="cur-tog">
             {["CAD","USD"].map(c=><button key={c} className={"cur-btn"+(currency===c?" on":"")} onClick={()=>setCurrency(c)}>{c}</button>)}
           </div>
@@ -947,7 +942,7 @@ export default function App() {
             ? <span style={{fontSize:".82rem",color:"var(--mu)"}}>👋 {userName}{isSitter?" (Sitter)":""}</span>
             : <button className="btn btn-gh" onClick={()=>setModal("auth")}>Sign in</button>}
           <button className="btn btn-a" onClick={()=>setModal(isSitter?"sitter-reg":"auth")}>
-            {isSitter ? "My Profile" : {isFR?"Devenir gardien":"List your home"}}
+            {isSitter ? "My Profile" : "List your home"}
           </button>
         </div>
       </nav>
@@ -956,7 +951,7 @@ export default function App() {
       <div className="hero">
         <div>
           <div className="hero-tag">🐾 #1 Pet Sitting Platform in Canada</div>
-          <h1>{isFR?"Partez en vacances,":"Go on vacation,"}<br/>{isFR?"laissez votre animal en ":"leave your pet in "}<i>{isFR?"bonnes mains":"loving hands"}</i></h1>
+          <h1>Go on vacation,<br/>leave your pet in <i>loving hands</i></h1>
           <p>Connect with trusted, verified pet sitters across Canada. Sitters set their own prices, availability and conditions. You choose by rating, price and reviews.</p>
           <div className="hero-btns">
             <button className="btn btn-a btn-lg" onClick={()=>document.getElementById("sitters").scrollIntoView({behavior:"smooth"})}>Find a sitter 🔍</button>
