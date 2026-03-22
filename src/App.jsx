@@ -1103,8 +1103,8 @@ export default function App() {
 
       <footer>
         <div className="flogo">Paw<span>Stay</span> 🐾</div>
-        <div>© 2026 PawStay · Verified platform · Secure PayPal payments · Canada
-      </footer>
+        <div>© 2026 PawStay · Verified platform · Secure PayPal payments · Canada     
+        </footer>
 
       {/* MODALS */}
       {modal === "sitter" && selected && <SitterDetailModal/>}
