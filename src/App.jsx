@@ -770,7 +770,7 @@ export default function App() {
               </div>
               <div className="ff">
                 <label>Message to sitter</label>
-                <textarea placeholder=T("Tell them about your pet — breed, age, habits, special needs...","Parlez de votre animal — race, âge, habitudes, besoins spéciaux...")/>
+                <textarea placeholder={T("Tell them about your pet — breed, age, habits, special needs...","Parlez de votre animal — race, âge, habitudes, besoins spéciaux...")/>
               </div>
               <BookingBreakdown s={s}/>
               <button className="btn btn-a btn-full" style={{marginTop:".85rem"}} onClick={handleBook}>
@@ -843,7 +843,7 @@ export default function App() {
                 <div className="fg"><label>City</label>
                   <select name="city" required>
                     <option value="">Select...</option>
-                    {CITIES.filter(c=>c!==T("All cities","Toutes les villes")).map(c=><option key={c}>{c}</option>)}
+                    {CITIES.filter(c=>c!=={T("All cities","Toutes les villes")}).map(c=><option key={c}>{c}</option>)}
                   </select>
                 </div>
               </div>
@@ -907,10 +907,10 @@ export default function App() {
               </div>
             </div>
             <div className="fg"><label>Pet name & breed</label>
-              <input placeholder=T("e.g. Max — Golden Retriever","ex. Max — Labrador") value={pet} onChange={e=>setPet(e.target.value)} required/>
+              <input placeholder={T("e.g. Max — Golden Retriever","ex. Max — Labrador") value={pet} onChange={e=>setPet(e.target.value)} required/>
             </div>
             <div className="fg"><label>Your review</label>
-              <textarea placeholder=T("Tell others about your experience — how was your pet cared for?","Partagez votre expérience — comment votre animal a-t-il été gardé?") value={text} onChange={e=>setText(e.target.value)} style={{minHeight:100}} required/>
+              <textarea placeholder={T("Tell others about your experience — how was your pet cared for?","Partagez votre expérience — comment votre animal a-t-il été gardé?") value={text} onChange={e=>setText(e.target.value)} style={{minHeight:100}} required/>
             </div>
             <div className="fg"><label>Upload a photo of your pet 📸</label>
               <input type="file" accept="image/*" ref={fileRef} style={{display:"none"}} onChange={handleFile}/>
