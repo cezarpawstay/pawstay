@@ -2,6 +2,154 @@ import { useState, useMemo, useRef } from "react";
 
 const CAD_USD = 0.74;
 
+const TRANSLATIONS = {
+  EN: {
+    nav_become: T.nav_become,
+    nav_login: T.nav_login,
+    hero_tag: T.hero_tag,
+    hero_h1a: T.hero_h1a,
+    hero_h1b: "leave your pet in",
+    hero_h1c: T.hero_h1c,
+    hero_p: "Connect with trusted, verified pet sitters across Canada. Sitters set their own prices, availability and conditions. You choose by rating, price and reviews.",
+    hero_btn1: T.hero_btn1,
+    hero_btn2: T.nav_become,
+    trust_main: "+1,200 verified sitters",
+    trust_sub: "across Canada · Avg. rating 4.9★ · Payments via PayPal",
+    stat1: T.stat1, stat2: T.stat2, stat3: T.stat3, stat4: T.stat4,
+    search_city: T.search_city, search_from: T.search_from, search_to: T.search_to, search_pet: "Pet type",
+    sec_title: T.sec_title, sec_meta: "sitter found", sec_metas: "sitters found",
+    filter_label: T.filter_label, avail_now: T.avail_now, has_yard: T.has_yard, meds: T.meds,
+    sort_label: T.sort_label, sort1: T.sort1, sort2: T.sort2, sort3: "Rating", sort4: T.sort4,
+    no_sitters: "No sitters found", no_sitters_sub: "Try adjusting your filters",
+    how_title: T.how_title, how_sub: T.how_sub,
+    how1_t: "Search & filter", how1_p: "Browse sitters by city, pet type, price and rating. Sitters set their own rates and availability.",
+    how2_t: "Book a stay", how2_p: "Choose your dates, send a request with a message. The sitter confirms within a few hours.",
+    how3_t: "Daily photo updates", how3_p: "Your sitter sends photos and updates every day. After the stay, leave a review with a photo!",
+    footer_sub: T.footer_sub,
+    footer_fee: "Platform fee: 8% charged to pet owners · 7% retained from sitters · 15% total",
+    modal_profile: "Sitter Profile", modal_about: "About", modal_services: "Services & Pricing",
+    modal_conditions: "Conditions & Rules", modal_avail: "Availability — April 2026",
+    modal_reviews: "Reviews", modal_book: "Book a Stay",
+    field_checkin: T.search_from, field_checkout: T.search_to, field_pet: "Pet type", field_service: "Service",
+    field_msg: "Message to sitter", field_msg_ph: "Tell them about your pet — breed, age, habits, special needs...",
+    btn_book: "Book Now", btn_book_empty: "Select dates to book",
+    via_paypal: "via PayPal 🐾",
+    profile_title: "Sitter Profile", yrs_exp: "yrs exp.",
+    avail_y: "✓ Available", avail_n: "✗ Unavailable",
+    verified: "✓ Verified", reviews_label: "reviews",
+    auth_title: "Welcome to PawStay", tab_owner: "🐾 I have a pet", tab_sitter: "🏠 I'm a sitter", tab_login: T.nav_login,
+    field_fname: "First name", field_lname: "Last name", field_email: "Email", field_phone: "Phone",
+    field_pass: "Password", field_pets: "Your pets", btn_create: "Create free account", btn_signin: T.nav_login,
+    no_account: "No account? ", signup_link: "Sign up",
+    sitter_reg_title: "Become a Sitter 🐾", field_city: T.search_city, field_zone: "Neighborhood",
+    field_price: "Your rate (CA$/night)", field_exp: "Years of experience",
+    field_accepts: "Accepted pets", field_svcs: "Services offered", field_about_sitter: "About you & your space",
+    field_about_ph: "Describe your experience with animals, your space, garden, own pets, special rules...",
+    paypal_note: "You keep 93% of each booking — PawStay retains a 7% platform fee automatically.",
+    btn_submit: "Submit application 🐾",
+    submit_note: "Your application will be reviewed by the PawStay team within 24–48 hours.",
+    review_title: "Leave a Review ✍️", field_rating: "Your rating",
+    field_pet_name: "Pet name & breed", field_pet_ph: "e.g. Max — Golden Retriever",
+    field_review: "Your review", field_review_ph: "Tell others about your experience — how was your pet cared for?",
+    field_photo: "Upload a photo of your pet 📸", btn_photo: "Click to upload a photo",
+    btn_publish: "Publish review 🐾",
+    toast_booked: "✓ Request sent to",
+    toast_booked2: "You'll hear back within 2–4 hours.",
+    toast_welcome: "Welcome,",
+    toast_sitter_live: "✓ Your sitter profile is now live! 🐾",
+    toast_review: "✓ Your review and photo have been published! Thank you.",
+    toast_dates: "Please select check-in and check-out dates!",
+    toast_unavail: "This sitter is not available right now.",
+    night: "night", nights: "nights",
+    sitter_continue: "Continue to sitter setup →",
+    city_all: "All cities", pet_all: "All",
+    srv_available: "Available", srv_na: "N/A",
+    price_breakdown: "Price Breakdown",
+    base_rate: "Sitter rate ×",
+    service_fee: "Service fee (8%)",
+    owner_fee_note: "charged to you",
+    you_pay: "You pay total",
+    sitter_gets: "Sitter receives",
+    platform_earns: "PawStay earns (15% total)",
+    secure_pay: "Secure payment via",
+    hcard_daily: "Daily photo updates",
+    hcard_verified: "✓ Verified · Fenced yard 🌿",
+  },
+  FR: {
+    nav_become: "Devenir gardien",
+    nav_login: "Connexion",
+    hero_tag: "#1 Plateforme de Gardiennage au Canada",
+    hero_h1a: "Partez en vacances,",
+    hero_h1b: "laissez votre animal en",
+    hero_h1c: "bonnes mains",
+    hero_p: "Connectez-vous avec des gardiens d'animaux vérifiés partout au Canada. Les gardiens fixent leurs propres prix, disponibilités et conditions. Vous choisissez selon les avis, le prix et la note.",
+    hero_btn1: "Trouver un gardien 🔍",
+    hero_btn2: "Devenir gardien",
+    trust_main: "+1 200 gardiens vérifiés",
+    trust_sub: "partout au Canada · Note moyenne 4,9★ · Paiements via PayPal",
+    stat1: "Gardiens vérifiés", stat2: "Animaux heureux", stat3: "Note moyenne", stat4: "Propriétaires satisfaits",
+    search_city: "Ville", search_from: "Arrivée", search_to: "Départ", search_pet: "Type d'animal",
+    sec_title: "Gardiens disponibles", sec_meta: "gardien trouvé", sec_metas: "gardiens trouvés",
+    filter_label: "Filtrer :", avail_now: "Disponible maintenant", has_yard: "Cour clôturée", meds: "Médicaments OK",
+    sort_label: "Trier :", sort1: "Recommandé", sort2: "Moins cher", sort3: "Note", sort4: "Plus d'avis",
+    no_sitters: "Aucun gardien trouvé", no_sitters_sub: "Essayez de modifier vos filtres",
+    how_title: "Comment fonctionne PawStay", how_sub: "Simple, transparent, fiable",
+    how1_t: "Rechercher et filtrer", how1_p: "Parcourez les gardiens par ville, type d'animal, prix et note. Les gardiens fixent leurs propres tarifs.",
+    how2_t: "Réserver un séjour", how2_p: "Choisissez vos dates, envoyez une demande avec un message. Le gardien confirme en quelques heures.",
+    how3_t: "Photos quotidiennes", how3_p: "Votre gardien envoie des photos chaque jour. Après le séjour, laissez un avis avec une photo!",
+    footer_sub: "Plateforme vérifiée · Paiements PayPal sécurisés · Canada",
+    footer_fee: "Frais de service: 8% pour les propriétaires · 7% pour les gardiens · 15% total",
+    modal_profile: "Profil Gardien", modal_about: "À propos", modal_services: "Services et tarifs",
+    modal_conditions: "Conditions et règles", modal_avail: "Disponibilité — Avril 2026",
+    modal_reviews: "Avis", modal_book: "Réserver un séjour",
+    field_checkin: "Arrivée", field_checkout: "Départ", field_pet: "Type d'animal", field_service: "Service",
+    field_msg: "Message au gardien", field_msg_ph: "Parlez de votre animal — race, âge, habitudes, besoins spéciaux...",
+    btn_book: "Réserver", btn_book_empty: "Sélectionnez les dates",
+    via_paypal: "via PayPal 🐾",
+    profile_title: "Profil Gardien", yrs_exp: "ans exp.",
+    avail_y: "✓ Disponible", avail_n: "✗ Indisponible",
+    verified: "✓ Vérifié", reviews_label: "avis",
+    auth_title: "Bienvenue sur PawStay", tab_owner: "🐾 J'ai un animal", tab_sitter: "🏠 Je suis gardien", tab_login: "Connexion",
+    field_fname: "Prénom", field_lname: "Nom", field_email: "Courriel", field_phone: "Téléphone",
+    field_pass: "Mot de passe", field_pets: "Vos animaux", btn_create: "Créer un compte gratuit", btn_signin: "Se connecter",
+    no_account: "Pas de compte ? ", signup_link: "S'inscrire",
+    sitter_reg_title: "Devenir Gardien 🐾", field_city: "Ville", field_zone: "Quartier",
+    field_price: "Votre tarif (CA$/nuit)", field_exp: "Années d'expérience",
+    field_accepts: "Animaux acceptés", field_svcs: "Services proposés", field_about_sitter: "À propos de vous et votre espace",
+    field_about_ph: "Décrivez votre expérience avec les animaux, votre espace, jardin, animaux propres, règles spéciales...",
+    paypal_note: "Vous gardez 93% de chaque réservation — PawStay retient automatiquement 7% de frais de plateforme.",
+    btn_submit: "Soumettre ma candidature 🐾",
+    submit_note: "Votre candidature sera examinée par l'équipe PawStay dans les 24-48 heures.",
+    review_title: "Laisser un avis ✍️", field_rating: "Votre note",
+    field_pet_name: "Nom et race de l'animal", field_pet_ph: "ex. Max — Labrador",
+    field_review: "Votre avis", field_review_ph: "Partagez votre expérience — comment votre animal a-t-il été gardé?",
+    field_photo: "Télécharger une photo de votre animal 📸", btn_photo: "Cliquez pour télécharger",
+    btn_publish: "Publier l'avis 🐾",
+    toast_booked: "✓ Demande envoyée à",
+    toast_booked2: "Vous serez contacté dans 2-4 heures.",
+    toast_welcome: "Bienvenue,",
+    toast_sitter_live: "✓ Votre profil de gardien est maintenant en ligne! 🐾",
+    toast_review: "✓ Votre avis et photo ont été publiés! Merci.",
+    toast_dates: "Veuillez sélectionner les dates d'arrivée et de départ!",
+    toast_unavail: "Ce gardien n'est pas disponible pour le moment.",
+    night: "nuit", nights: "nuits",
+    sitter_continue: "Continuer →",
+    city_all: "Toutes les villes", pet_all: "Tous",
+    srv_available: "Disponible", srv_na: "N/D",
+    price_breakdown: "Détail du prix",
+    base_rate: "Tarif gardien ×",
+    service_fee: "Frais de service (8%)",
+    owner_fee_note: "à votre charge",
+    you_pay: "Vous payez au total",
+    sitter_gets: "Le gardien reçoit",
+    platform_earns: "PawStay gagne (15% total)",
+    secure_pay: "Paiement sécurisé via",
+    hcard_daily: "Photos quotidiennes",
+    hcard_verified: "✓ Vérifié · Cour clôturée 🌿",
+  }
+};
+
+
 // ─── EMAILJS CONFIG ──────────────────────────────────────────────────────────
 const EMAILJS_SERVICE  = "service_8lfa0t9";
 const EMAILJS_TEMPLATE = "template_lbbuwtk";
@@ -273,6 +421,8 @@ function PaymentModal({ booking, onClose, onSuccess }) {
 export default function App() {
   const [sitters, setSitters] = useState(SITTERS);
   const [currency, setCurrency] = useState("CAD");
+  const [lang, setLang] = useState("EN");
+  const T = TRANSLATIONS[lang];
   const [modal, setModal] = useState(null);
   const [selected, setSelected] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -285,7 +435,7 @@ export default function App() {
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterYard, setFilterYard] = useState(false);
   const [filterMed, setFilterMed] = useState(false);
-  const [sortBy, setSortBy] = useState("Recommended");
+  const [sortBy, setSortBy] = useState(T.sort1);
   const [search, setSearch] = useState({ from:"", to:"", pet:"All" });
   const [photoModal, setPhotoModal] = useState(null);
   const [reviewForm, setReviewForm] = useState({ sitterId:null, stars:5, text:"", pet:"", photo:null });
@@ -306,10 +456,10 @@ export default function App() {
     if (filterAvail) list = list.filter(s => s.available);
     if (filterYard) list = list.filter(s => s.hasYard);
     if (filterMed) list = list.filter(s => s.medicationOk);
-    if (sortBy === "Cheapest") list.sort((a,b) => a.price-b.price);
+    if (sortBy === T.sort2) list.sort((a,b) => a.price-b.price);
     else if (sortBy === "Most expensive") list.sort((a,b) => b.price-a.price);
     else if (sortBy === "Rating") list.sort((a,b) => b.rating-a.rating);
-    else if (sortBy === "Most reviews") list.sort((a,b) => b.reviewCount-a.reviewCount);
+    else if (sortBy === T.sort4) list.sort((a,b) => b.reviewCount-a.reviewCount);
     return list;
   }, [sitters, filterCity, filterPet, filterAvail, filterYard, filterMed, sortBy]);
 
@@ -935,6 +1085,9 @@ export default function App() {
       <nav>
         <div className="logo">Paw<span>Stay</span> 🐾</div>
         <div className="nav-r">
+          <div className="cur-tog" style={{marginRight:".25rem"}}>
+            {["EN","FR"].map(l=><button key={l} className={"cur-btn"+(lang===l?" on":"")} onClick={()=>setLang(l)}>{l==="EN"?"🇬🇧 EN":"🇫🇷 FR"}</button>)}
+          </div>
           <div className="cur-tog">
             {["CAD","USD"].map(c=><button key={c} className={"cur-btn"+(currency===c?" on":"")} onClick={()=>setCurrency(c)}>{c}</button>)}
           </div>
@@ -942,7 +1095,7 @@ export default function App() {
             ? <span style={{fontSize:".82rem",color:"var(--mu)"}}>👋 {userName}{isSitter?" (Sitter)":""}</span>
             : <button className="btn btn-gh" onClick={()=>setModal("auth")}>Sign in</button>}
           <button className="btn btn-a" onClick={()=>setModal(isSitter?"sitter-reg":"auth")}>
-            {isSitter ? "My Profile" : "List your home"}
+            {isSitter ? "My Profile" : T.nav_become}
           </button>
         </div>
       </nav>
@@ -1007,7 +1160,7 @@ export default function App() {
 
       {/* STATS */}
       <div className="stats">
-        {[["1,200+","Verified sitters"],["15,000+","Happy pets"],["4.9 ★","Average rating"],["98%","Satisfied owners"]].map(([n,l])=>(
+        {[["1,200+",T.stat1],["15,000+",T.stat2],["4.9 ★",T.stat3],["98%",T.stat4]].map(([n,l])=>(
           <div className="stat" key={l}><div className="stat-n">{n}</div><div className="stat-l">{l}</div></div>
         ))}
       </div>
@@ -1027,7 +1180,7 @@ export default function App() {
           <button className={"fc"+(filterYard?" on":"")} onClick={()=>setFilterYard(!filterYard)}>🌿 Has yard</button>
           <button className={"fc"+(filterMed?" on":"")} onClick={()=>setFilterMed(!filterMed)}>💊 Meds OK</button>
           <span className="flbl" style={{marginLeft:".5rem"}}>Sort:</span>
-          {["Recommended","Cheapest","Rating","Most reviews"].map(s=><button key={s} className={"fc"+(sortBy===s?" on":"")} onClick={()=>setSortBy(s)}>{s}</button>)}
+          {[T.sort1,T.sort2,"Rating",T.sort4].map(s=><button key={s} className={"fc"+(sortBy===s?" on":"")} onClick={()=>setSortBy(s)}>{s}</button>)}
         </div>
 
         {/* CARDS */}
