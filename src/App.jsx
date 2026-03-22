@@ -2,97 +2,6 @@ import { useState, useMemo, useRef } from "react";
 
 const CAD_USD = 0.74;
 
-const TRANSLATIONS = {
-  EN: {
-    nav_become: "Become a sitter", nav_login: {T.nav_login},
-    hero_tag: {T.hero_tag},
-    hero_h1a: "Go on vacation,", hero_h1b: "leave your pet in", hero_h1c: "loving hands",
-    hero_p: "Connect with trusted, verified pet sitters across Canada. Sitters set their own prices, availability and conditions. You choose by rating, price and reviews.",
-    hero_btn1: {T.hero_btn1}, hero_btn2: "Become a sitter",
-    trust_main: "+1,200 verified sitters", trust_sub: "across Canada · Avg. rating 4.9★ · Payments via PayPal",
-    stat1: "Verified sitters", stat2: "Happy pets", stat3: "Average rating", stat4: "Satisfied owners",
-    search_city: "City", search_from: "Check-in", search_to: "Check-out", search_pet: "Pet type",
-    sec_title: "Available Sitters", filter_label: {T.filter_label}, avail_now: {T.avail_now},
-    has_yard: {T.has_yard}, meds: {T.meds}, sort_label: {T.sort_label}, sort1: {T.sort1},
-    sort2: {T.sort2}, sort3: {T.sort3}, sort4: {T.sort4},
-    no_sitters: {T.no_sitters}, no_sitters_sub: {T.no_sitters_sub},
-    how_title: "How PawStay works", how_sub: {T.how_sub},
-    how1_t: {T.how1_t}, how1_p: "Browse sitters by city, pet type, price and rating.",
-    how2_t: {T.how2_t}, how2_p: "Choose your dates and send a request. The sitter confirms within hours.",
-    how3_t: {T.how3_t}, how3_p: "Your sitter sends photos every day. After the stay, leave a review!",
-    footer_sub: "Verified platform · Secure PayPal payments · Canada",
-    modal_about: "About", modal_services: "Services & Pricing", modal_conditions: "Conditions & Rules",
-    modal_avail: "Availability — April 2026", modal_reviews: "Reviews", modal_book: "Book a Stay",
-    field_checkin: "Check-in", field_checkout: "Check-out", field_pet: "Pet type",
-    field_service: "Service", field_msg: "Message to sitter",
-    field_msg_ph: "Tell them about your pet — breed, age, habits, special needs...",
-    btn_book: "Book Now", btn_book_empty: "Select dates to book",
-    auth_title: "Welcome to PawStay", tab_owner: "🐾 I have a pet", tab_sitter: "🏠 I'm a sitter", tab_login: {T.nav_login},
-    field_fname: "First name", field_lname: "Last name", field_email: "Email", field_phone: "Phone",
-    field_pass: "Password", field_pets: "Your pets", btn_create: "Create free account", btn_signin: {T.nav_login},
-    no_account: "No account? ", signup_link: "Sign up",
-    sitter_reg_title: "Become a Sitter 🐾", field_city: "City", field_zone: "Neighborhood",
-    field_price: "Your rate (CA$/night)", field_exp: "Years of experience",
-    field_accepts: "Accepted pets", field_svcs: "Services offered",
-    field_about_ph: "Describe your experience with animals, your space, garden, own pets...",
-    paypal_note: "You keep 93% of each booking — PawStay retains a 7% platform fee.",
-    btn_submit: "Submit application 🐾",
-    submit_note: "Your application will be reviewed by the PawStay team within 24-48 hours.",
-    night: "night", nights: "nights", yrs_exp: "yrs exp.",
-    avail_y: "✓ Available", avail_n: "✗ Unavailable", verified: "✓ Verified",
-    price_breakdown: "Price Breakdown", base_rate: "Sitter rate ×",
-    service_fee: "Service fee (8%)", owner_fee_note: "charged to you",
-    you_pay: "You pay total", sitter_gets: "Sitter receives", platform_earns: "PawStay earns (15% total)",
-    secure_pay: "Secure payment via", city_all: {T.city_all}, pet_all: "All",
-    srv_available: "Available", srv_na: "N/A",
-  },
-  FR: {
-    nav_become: "Devenir gardien", nav_login: "Connexion",
-    hero_tag: "#1 Plateforme de Gardiennage au Canada",
-    hero_h1a: "Partez en vacances,", hero_h1b: "laissez votre animal en", hero_h1c: "bonnes mains",
-    hero_p: "Connectez-vous avec des gardiens d'animaux vérifiés partout au Canada. Les gardiens fixent leurs propres prix, disponibilités et conditions. Vous choisissez selon les avis et la note.",
-    hero_btn1: "Trouver un gardien 🔍", hero_btn2: "Devenir gardien",
-    trust_main: "+1 200 gardiens vérifiés", trust_sub: "partout au Canada · Note moyenne 4,9★ · Paiements via PayPal",
-    stat1: "Gardiens vérifiés", stat2: "Animaux heureux", stat3: "Note moyenne", stat4: "Propriétaires satisfaits",
-    search_city: "Ville", search_from: "Arrivée", search_to: "Départ", search_pet: "Type d'animal",
-    sec_title: "Gardiens disponibles", filter_label: "Filtrer :", avail_now: "Disponible maintenant",
-    has_yard: "Cour clôturée", meds: "Médicaments OK", sort_label: "Trier :", sort1: "Recommandé",
-    sort2: "Moins cher", sort3: "Note", sort4: "Plus d'avis",
-    no_sitters: "Aucun gardien trouvé", no_sitters_sub: "Essayez de modifier vos filtres",
-    how_title: "Comment fonctionne PawStay", how_sub: "Simple, transparent, fiable",
-    how1_t: "Rechercher et filtrer", how1_p: "Parcourez les gardiens par ville, type d'animal, prix et note.",
-    how2_t: "Réserver un séjour", how2_p: "Choisissez vos dates et envoyez une demande. Le gardien confirme en quelques heures.",
-    how3_t: "Photos quotidiennes", how3_p: "Votre gardien envoie des photos chaque jour. Après le séjour, laissez un avis!",
-    footer_sub: "Plateforme vérifiée · Paiements PayPal sécurisés · Canada",
-    modal_about: "À propos", modal_services: "Services et tarifs", modal_conditions: "Conditions et règles",
-    modal_avail: "Disponibilité — Avril 2026", modal_reviews: "Avis", modal_book: "Réserver un séjour",
-    field_checkin: "Arrivée", field_checkout: "Départ", field_pet: "Type d'animal",
-    field_service: "Service", field_msg: "Message au gardien",
-    field_msg_ph: "Parlez de votre animal — race, âge, habitudes, besoins spéciaux...",
-    btn_book: "Réserver", btn_book_empty: "Sélectionnez les dates",
-    auth_title: "Bienvenue sur PawStay", tab_owner: "🐾 J'ai un animal", tab_sitter: "🏠 Je suis gardien", tab_login: "Connexion",
-    field_fname: "Prénom", field_lname: "Nom", field_email: "Courriel", field_phone: "Téléphone",
-    field_pass: "Mot de passe", field_pets: "Vos animaux", btn_create: "Créer un compte gratuit", btn_signin: "Se connecter",
-    no_account: "Pas de compte ? ", signup_link: "S'inscrire",
-    sitter_reg_title: "Devenir Gardien 🐾", field_city: "Ville", field_zone: "Quartier",
-    field_price: "Votre tarif (CA$/nuit)", field_exp: "Années d'expérience",
-    field_accepts: "Animaux acceptés", field_svcs: "Services proposés",
-    field_about_ph: "Décrivez votre expérience avec les animaux, votre espace, jardin, animaux propres...",
-    paypal_note: "Vous gardez 93% de chaque réservation — PawStay retient automatiquement 7%.",
-    btn_submit: "Soumettre ma candidature 🐾",
-    submit_note: "Votre candidature sera examinée par l'équipe PawStay dans les 24-48 heures.",
-    night: "nuit", nights: "nuits", yrs_exp: "ans exp.",
-    avail_y: "✓ Disponible", avail_n: "✗ Indisponible", verified: "✓ Vérifié",
-    price_breakdown: "Détail du prix", base_rate: "Tarif gardien ×",
-    service_fee: "Frais de service (8%)", owner_fee_note: "à votre charge",
-    you_pay: "Vous payez au total", sitter_gets: "Le gardien reçoit", platform_earns: "PawStay gagne (15% total)",
-    secure_pay: "Paiement sécurisé via", city_all: "Toutes les villes", pet_all: "Tous",
-    srv_available: "Disponible", srv_na: "N/D",
-  }
-};
-
-
-
 // ─── EMAILJS CONFIG ──────────────────────────────────────────────────────────
 const EMAILJS_SERVICE  = "service_8lfa0t9";
 const EMAILJS_TEMPLATE = "template_lbbuwtk";
@@ -199,7 +108,7 @@ const SITTERS = [
   },
 ];
 
-const CITIES = [{T.city_all},"Toronto","Montreal","Vancouver","Calgary","Ottawa","Edmonton"];
+const CITIES = ["All cities","Toronto","Montreal","Vancouver","Calgary","Ottawa","Edmonton"];
 const PET_TYPES = ["Dog","Cat","Bird","Rabbit","Hamster"];
 const SERVICES_LIST = ["Overnight stay","Home visits","Daily walks","Grooming"];
 
@@ -364,8 +273,6 @@ function PaymentModal({ booking, onClose, onSuccess }) {
 export default function App() {
   const [sitters, setSitters] = useState(SITTERS);
   const [currency, setCurrency] = useState("CAD");
-  const [lang, setLang] = useState("EN");
-  const T = TRANSLATIONS[lang];
   const [modal, setModal] = useState(null);
   const [selected, setSelected] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -373,12 +280,12 @@ export default function App() {
   const [isSitter, setIsSitter] = useState(false);
   const [paymentData, setPaymentData] = useState(null);
   const [toast, setToast] = useState(null);
-  const [filterCity, setFilterCity] = useState({T.city_all});
+  const [filterCity, setFilterCity] = useState("All cities");
   const [filterPet, setFilterPet] = useState("All");
   const [filterAvail, setFilterAvail] = useState(false);
   const [filterYard, setFilterYard] = useState(false);
   const [filterMed, setFilterMed] = useState(false);
-  const [sortBy, setSortBy] = useState({T.sort1});
+  const [sortBy, setSortBy] = useState("Recommended");
   const [search, setSearch] = useState({ from:"", to:"", pet:"All" });
   const [photoModal, setPhotoModal] = useState(null);
   const [reviewForm, setReviewForm] = useState({ sitterId:null, stars:5, text:"", pet:"", photo:null });
@@ -394,15 +301,15 @@ export default function App() {
 
   const filtered = useMemo(() => {
     let list = [...sitters];
-    if (filterCity !== {T.city_all}) list = list.filter(s => s.city === filterCity);
+    if (filterCity !== "All cities") list = list.filter(s => s.city === filterCity);
     if (filterPet !== "All") list = list.filter(s => s.accepts.includes(filterPet));
     if (filterAvail) list = list.filter(s => s.available);
     if (filterYard) list = list.filter(s => s.hasYard);
     if (filterMed) list = list.filter(s => s.medicationOk);
-    if (sortBy === {T.sort2}) list.sort((a,b) => a.price-b.price);
+    if (sortBy === "Cheapest") list.sort((a,b) => a.price-b.price);
     else if (sortBy === "Most expensive") list.sort((a,b) => b.price-a.price);
-    else if (sortBy === {T.sort3}) list.sort((a,b) => b.rating-a.rating);
-    else if (sortBy === {T.sort4}) list.sort((a,b) => b.reviewCount-a.reviewCount);
+    else if (sortBy === "Rating") list.sort((a,b) => b.rating-a.rating);
+    else if (sortBy === "Most reviews") list.sort((a,b) => b.reviewCount-a.reviewCount);
     return list;
   }, [sitters, filterCity, filterPet, filterAvail, filterYard, filterMed, sortBy]);
 
@@ -927,7 +834,7 @@ export default function App() {
                 <div className="fg"><label>City</label>
                   <select name="city" required>
                     <option value="">Select...</option>
-                    {CITIES.filter(c=>c!=={T.city_all}).map(c=><option key={c}>{c}</option>)}
+                    {CITIES.filter(c=>c!=="All cities").map(c=><option key={c}>{c}</option>)}
                   </select>
                 </div>
               </div>
@@ -1028,9 +935,6 @@ export default function App() {
       <nav>
         <div className="logo">Paw<span>Stay</span> 🐾</div>
         <div className="nav-r">
-          <div className="cur-tog" style={{marginRight:".3rem"}}>
-            {["EN","FR"].map(l=><button key={l} className={"cur-btn"+(lang===l?" on":"")} onClick={()=>setLang(l)}>{l==="EN"?"🇬🇧":"🇫🇷"} {l}</button>)}
-          </div>
           <div className="cur-tog">
             {["CAD","USD"].map(c=><button key={c} className={"cur-btn"+(currency===c?" on":"")} onClick={()=>setCurrency(c)}>{c}</button>)}
           </div>
@@ -1047,11 +951,11 @@ export default function App() {
       <div className="hero">
         <div>
           <div className="hero-tag">🐾 #1 Pet Sitting Platform in Canada</div>
-          <h1>{T.hero_h1a}<br/>{T.hero_h1b} <i>loving hands</i></h1>
+          <h1>Go on vacation,<br/>leave your pet in <i>loving hands</i></h1>
           <p>Connect with trusted, verified pet sitters across Canada. Sitters set their own prices, availability and conditions. You choose by rating, price and reviews.</p>
           <div className="hero-btns">
             <button className="btn btn-a btn-lg" onClick={()=>document.getElementById("sitters").scrollIntoView({behavior:"smooth"})}>Find a sitter 🔍</button>
-            <button className="btn btn-gh btn-lg" onClick={()=>setModal("sitter-reg")}>{T.nav_become}</button>
+            <button className="btn btn-gh btn-lg" onClick={()=>setModal("sitter-reg")}>Become a sitter</button>
           </div>
           <div className="trust">
             <div className="tavs">{["🐕","🐈","🐾","👩","🧑"].map((e,i)=><div key={i} className="tav">{e}</div>)}</div>
@@ -1111,7 +1015,7 @@ export default function App() {
       {/* SITTER LIST */}
       <div className="sec" id="sitters">
         <div className="sec-hd">
-          <div className="sec-title">{T.sec_title}</div>
+          <div className="sec-title">Available Sitters</div>
           <span className="sec-meta">{filtered.length} sitter{filtered.length!==1?"s":""} found</span>
         </div>
 
@@ -1123,7 +1027,7 @@ export default function App() {
           <button className={"fc"+(filterYard?" on":"")} onClick={()=>setFilterYard(!filterYard)}>🌿 Has yard</button>
           <button className={"fc"+(filterMed?" on":"")} onClick={()=>setFilterMed(!filterMed)}>💊 Meds OK</button>
           <span className="flbl" style={{marginLeft:".5rem"}}>Sort:</span>
-          {[{T.sort1},{T.sort2},{T.sort3},{T.sort4}].map(s=><button key={s} className={"fc"+(sortBy===s?" on":"")} onClick={()=>setSortBy(s)}>{s}</button>)}
+          {["Recommended","Cheapest","Rating","Most reviews"].map(s=><button key={s} className={"fc"+(sortBy===s?" on":"")} onClick={()=>setSortBy(s)}>{s}</button>)}
         </div>
 
         {/* CARDS */}
@@ -1180,13 +1084,13 @@ export default function App() {
       {/* HOW IT WORKS */}
       <div className="how">
         <div className="how-in">
-          <div className="how-title">{T.how_title}</div>
+          <div className="how-title">How PawStay works</div>
           <div className="how-sub">Simple, transparent, trusted</div>
           <div className="how-grid">
             {[
-              {i:"🔍",t:{T.how1_t},p:"Browse sitters by city, pet type, price and rating. Sitters set their own rates and availability."},
-              {i:"📅",t:{T.how2_t},p:"Choose your dates, send a request with a message. The sitter confirms within a few hours."},
-              {i:"📸",t:{T.how3_t},p:"Your sitter sends photos and updates every day. After the stay, leave a review with a photo!"},
+              {i:"🔍",t:"Search & filter",p:"Browse sitters by city, pet type, price and rating. Sitters set their own rates and availability."},
+              {i:"📅",t:"Book a stay",p:"Choose your dates, send a request with a message. The sitter confirms within a few hours."},
+              {i:"📸",t:"Daily photo updates",p:"Your sitter sends photos and updates every day. After the stay, leave a review with a photo!"},
             ].map(({i,t,p})=>(
               <div className="how-step" key={t}>
                 <div className="how-ico">{i}</div>
