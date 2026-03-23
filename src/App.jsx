@@ -1103,7 +1103,7 @@ export default function App() {
 
       <footer>
         <div className="flogo">Paw<span>Stay</span> 🐾</div>
-        <div>© 2026 PawStay · Verified platform · Secure PayPal payments · Canada     
+        <div><div>© 2026 PawStay · Verified platform · Secure PayPal payments · Canada · <a href="/privacy" style={{color:"#C96A18",textDecoration:"none"}}>Privacy Policy</a></div>
         </footer>
 
       {/* MODALS */}
